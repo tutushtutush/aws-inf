@@ -3,6 +3,7 @@
 *.d.ts
 node_modules
 .gitignore
+.env
 # CDK asset staging directory
 .cdk.staging
 cdk.out
