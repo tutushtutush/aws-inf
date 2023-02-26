@@ -1,36 +1,42 @@
-import * as cdk from "aws-cdk-lib";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import {
+  AttributeType,
+  BillingMode,
+  ProjectionType,
+  Table,
+} from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
-// import * as sqs from 'aws-cdk-lib/aws-sqs';'
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import { AttributeType } from "aws-cdk-lib/aws-dynamodb";
 
-export class AwsInfStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class AwsInfStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const singleTable = new dynamodb.Table(this, "SingleTable", {
-      partitionKey: {
-        name: "pk",
-        type: dynamodb.AttributeType.STRING,
-      },
-      sortKey: {
-        name: "sk",
-        type: dynamodb.AttributeType.STRING,
-      },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+
+    const singleTable = new Table(this, "SingleTable", {
+      partitionKey: { name: "PK", type: AttributeType.STRING },
+      sortKey: { name: "SK", type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    // Define global secondary index for tags attribute
-    singleTable.addGlobalSecondaryIndex({
+    const gsi1 = singleTable.addGlobalSecondaryIndex({
       indexName: "GSI1",
-      partitionKey: { name: "tags", type: AttributeType.STRING },
-      sortKey: { name: "sk", type: AttributeType.STRING },
+      partitionKey: { name: "GSI1PK", type: AttributeType.STRING },
+      sortKey: { name: "GSI1SK", type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
     });
 
-    // Define the singleTable's auto scaling
-    singleTable.autoScaleWriteCapacity({
-      minCapacity: 1,
-      maxCapacity: 50,
+    const gsi2 = singleTable.addGlobalSecondaryIndex({
+      indexName: "GSI2",
+      partitionKey: { name: "GSI2PK", type: AttributeType.STRING },
+      sortKey: { name: "GSI2SK", type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    const gsi3 = singleTable.addGlobalSecondaryIndex({
+      indexName: "GSI3",
+      partitionKey: { name: "GSI3PK", type: AttributeType.STRING },
+      sortKey: { name: "GSI3SK", type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
     });
   }
 }
