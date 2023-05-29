@@ -1,4 +1,3 @@
-
 import * as cdk from "aws-cdk-lib";
 import { aws_secretsmanager as secretsmanager } from "aws-cdk-lib";
 import * as dotenv from "dotenv";
@@ -23,7 +22,7 @@ export class AwsInfStack extends Stack {
       secretName: "github-token",
       secretStringValue: secretString,
       description: "GitHub access key for telegram bot code pipeline",
-
+    });
     const singleTable = new Table(this, "SingleTable", {
       partitionKey: { name: "PK", type: AttributeType.STRING },
       sortKey: { name: "SK", type: AttributeType.STRING },
@@ -50,7 +49,6 @@ export class AwsInfStack extends Stack {
       partitionKey: { name: "GSI3PK", type: AttributeType.STRING },
       sortKey: { name: "GSI3SK", type: AttributeType.STRING },
       projectionType: ProjectionType.ALL,
-
     });
   }
 }
