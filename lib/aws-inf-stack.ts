@@ -9,6 +9,7 @@ import {
   Table,
 } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
+
 dotenv.config();
 
 export class AwsInfStack extends Stack {
@@ -29,7 +30,10 @@ export class AwsInfStack extends Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
     });
-
+    new cdk.CfnOutput(this, "SingleTableName", {
+      value: singleTable.tableName,
+      exportName: "SingleTableName",
+    });
     const gsi1 = singleTable.addGlobalSecondaryIndex({
       indexName: "GSI1",
       partitionKey: { name: "GSI1PK", type: AttributeType.STRING },
